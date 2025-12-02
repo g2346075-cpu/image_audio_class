@@ -1,10 +1,8 @@
-import numpy as numpy
+import numpy as np
 
 
 print("Hello World")
 
-arr = np.array([0,1,2,3]
+arr = np.array([0,1,2,3])
 
-prin t(arr))
-
-!python source_1.py
+print(arr)
