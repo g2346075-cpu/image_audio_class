@@ -1,6 +1,6 @@
 import cv2
 import sys
-from IPytho.display import Image, display, update_display
+from IPython.display import Image, display, update_display
 import time
 
 def imshow(img, name):
