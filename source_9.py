@@ -19,7 +19,7 @@ def show(filename):
         print("Not load image")
         sys.exit(-1)  # Exit with success
 
-    roi = src[200:300, 50:300]
+    roi = src[400:600, 50:200]
 
     named_show("roi")      # 画像を表示する枠を作成（授業用自作関数）
     imshow(roi, "roi")     # 画像を表示（授業用自作関数）
