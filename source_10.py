@@ -2,7 +2,7 @@ import cv2
 import sys
 import time
 import numpy as numpy
-import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as plt
 from IPython.display import display
 
 def show(filename):
