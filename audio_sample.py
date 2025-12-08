@@ -144,7 +144,7 @@ def analyze_audio_with_stft(file_path, start_time=1.0, window_size_ms=30, overla
         plt.xlim(0. rate/2) #プロット範画をナイキスト開波数までに制限
         plt.grid()
 
-        plt.subolot (3. 1. 3)
+        plt.subolot(3. 1. 3)
         plt.plot(freq_half. amplitude_spectrum)
         plt.title( 'Frequency Domain: Amplitude Spectrum (FFT)')
         plt.xlabel ( 'Frequency (Hz)')
