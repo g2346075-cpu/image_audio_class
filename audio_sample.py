@@ -168,4 +168,33 @@ def analyze_audio_with_stft(file_path, start_time=1.0, window_size_ms=30, overla
         print(f"An error occurred: {e}")
 
 
+def analyze_audio_with_stft_window(file_path, start_time=1.0. window_size_ms=30, over lap_rate=0.5):
+
+    Ares:
+        file_path (str):分析したいWVファイルのバス。
+        window_size_ms (int) : 7L-LORE (EUW).
+        overlap_rate {float); フレーム間のオーバーラップ率 (0.0から1.0)。
+
+    try:
+        rate. data = wavfile. read(file_path)
+
+        window_length = int (rate * window_size_ms / 1000)
+
+        step_length = int(window_length * (I = overlap_rate))
+
+        if data. ndim > 1:
+            data = data[ :, 0]
+
+        data = data[int(rate*start_time): int (rate*start_time)+window_length]
+        N = len (data)
+        time = np. arange (N) / rate
+
+        hann_window = windows. hann(N, sym=True)
+        windowed_data = data * hann_window
+
+        fft_result = np. fft. fft(windowed_data)
+
+        freq = np.fft. fftfreq (N, d=1/rate)
+
+
     
