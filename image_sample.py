@@ -10,166 +10,163 @@ import matplotlib. pyplot as plt
 #Colabotaroyだと不便のため、授業用自作関数によって対応。
 #ほかの手法に変更することもOK。
 
-def imshow(img, name): 
+def imshow(img, name):
 
-   img = cv2. imencode('.png', img) [1]
-   update_display(Image(img), display_id=name)
+  img = cv2. imencode('.png', img) [1]
+  update_display(Image(img), display_id=name)
 
 def named_show(name):
 
   display(None, display_id=name)
 
 def show_image(file_path, is_color=1, window_name="src"):
-    srcMat=cv2.imread(file_path,is_color)#画像を読み込み、配列にする
+  srcMat= cv2.imread(file_path,is_color)#画像を読み込み、配列にする
 
   # 画像が正常にオープンできたか確認
   if srcMat is None:
     print("Not load image:画像がロードできません。ファイル名を確認してください。")
     sys. exit(-1) # Exit with success
 
-  srcMat = cv2.resize(srcMat,(500,500))
+  srcMat = cv2. resize(srcMat, (500,500))
 
   named_show(window_name) #画像を表示する枠を作成(授業用自作関数)
   imshow(srcMat,window_name)#画像を表示(授業用自作関数)
 
   #配列の次元によって、場合分けをする。
   if len(srcMat.shape) == 2:#チャンネル方向への次元がないため、2次元
-    height = srcMat. shape [0]
+    height = srcMat. shape[0]
     width = srcMat. shape[1]
-    #height, width = srcMat.shape[:2] でも可
+    #height, width = srcMat. shape[:2] でも可
 
     print(f"画像横幅:{width},画像縱幅:{height}")
     print(f"画像色チャンネル:1")
   else:#チャンネル方向への次元がないため、カラー画像は3次元
     height = srcMat. shape[0]
     width = srcMat. shape[1]
-    channels= srcMat.shape[2]##3次元の場合取得可能。
+    channels=srcMat.shape[2]##3次元の場合取得可能。
     #height, width, channel = srcMat. shape[:3] でも可
 
-    print(f"画像横幅:{width},画像縱幅:{height}")
-    print(f"画像色チャンネル 3はカラー、1はグレースケール:{channels}")
+    print(f"画像横幅 : {width},画像縱幅 : {height}")
+    print(f"画像色チャンネル　3はカラー、1はグレースケール : {channels}")
 
 def pickcolor_image(file_path, lower_hue, upper_hue, window_name="src"):
-  srcMat= cv2.imread(file_path,1)#画像を読み込み、配列にする
+  srcMat =cv2.imread(file_path,1)#画像を読み込み、配列にする
 
   # 画像が正常にオープンできたか確認
   if srcMat is None:
-    print("Not load image:画像がロードできません。ファイル名を確認してください。")
+    print("Not load image : 画像がロードできません。ファイル名を確認してください。")
     sys. exit(-1) # Exit with success
 
-    named_show(window_name)#画像を表示する枠を作成(授業用自作関数)
-    imshow(srcMat,window_name)#画像を表示(授業用自作関数)
+  named_show(window_name)#画像を表示する枠を作成(授業用自作関数)
+  imshow(srcMat,window_name)#画像を表示(授業用自作関数)
 
-    hsv_image = cv2.cvtColor(srcMat,cv2.COLOR_BGR2HSV)#画像をRGB空間から、HSV色空間へ変換する
+  hsv_image = cv2.cvtColor(srcMat,cv2.COLOR_BGR2HSV)#画像をRGB空間から、HSV色空間へ変換する
 
-    lower = np. array([lower_hue, 200, 200]) # TBR
-    upper = np. array([upper_hue, 255, 255]) # EBR
+  lower = np. array([lower_hue, 200, 200]) # 下限
+  upper = np. array([upper_hue, 255, 255]) # EBR
 
   # 4. 指定した範囲内の色を抽出するマスクを作成
-    mask = cv2. inRange(hsv_image, lower, upper)
+  mask = cv2. inRange(hsv_image, lower, upper)
 
   # 5. 元画像とマスクを重ね合わせて色を抽出
-    srcMat = cv2.bitwise_and(srcMat, srcMat, mask=mask)
+  srcMat = cv2.bitwise_and(srcMat, srcMat, mask=mask)
 
-    named_show(window_name)#画像を表示する枠を作成(授業用自作関数)
-    imshow(srcMat,window_name)#画像を表示(授業用自作関数)
+  named_show(window_name)#画像を表示する枠を作成(授業用自作関数)
+  imshow(srcMat,window_name)#画像を表示(授業用自作関数)  
 
-  def show_histgram(file_path, window_name="src"):
-    srcMat=cv2.imread(file_path)#画像を読み込み、配列にする
-
-  # 画像が正常にオープンできたか確認
-  if srcMat is None:
-    print("Not load image:画像がロードできません。ファイル名を確認してください。")
-    sys. exit(-1) # Exit with success
-
-    named_show(window_name) #画像を表示する枠を作成(授業用自作関数)
-    imshow(srcMat,window_name)#画像を表示(授業用自作関数)
-
-  # グラフの設定
-    colors = ('b', 'g', 'r')
-    plt.figure(figsize=(10, 5))
-    plt. title('Color Histogram' )
-    plt. xlabel('Pixel Value (0-255)')
-    plt. ylabel (' Frequency' )
-
-  # 各チャンネルごとにヒストグラムを計算して描画
-    for i, col in enumerate(colors):
-  # cv2.calcHist([画像],[チャンネル],マスク,[BIN数],[範囲])
-    hist = cv2. calcHist([srcMat], [i], None, [256], [0, 256])
-    plt. plot(hist, color=col, label=col. upper())
-    plt. xlim([0, 256])
-
-    plt. legend()
-    plt. show()
-
-  def histogram_equal(file_path, window_name="src"):
-    srcMat =cv2.imread(file_path)#画像を読み込み、配列にする
+def show_histgram(file_path, window_name="src"):
+  srcMat=cv2.imread(file_path)#画像を読み込み、配列にする
 
   #画像が正常にオープンできたか確認
   if srcMat is None:
     print("Not load image:画像がロードできません。ファイル名を確認してください。")
     sys. exit(-1) # Exit with success
 
-    named_show(window_name) #画像を表示する枠を作成(授業用自作関数)
-    imshow(srcMat,window_name)#画像を表示(授業用自作関数)
-
-    gray_image = cv2.cvtColor(srcMat,cv2.COLOR_BGR2GRAY)#画像をRGB空間から、HSV色空間へ変換する
-
-  # ヒストグラム平坦化の実行
-    equ = cv2. equalizeHist(gray_image)
-
-  # 結果の横並び表示
-    res = np. hstack((gray_image, equ))
-
-    named_show(window_name+"equ") #画像を表示する枠を作成(授業用自作関数)
-    imshow(res,window_name+"equ")#画像を表示(授業用自作関数)
+  named_show(window_name) #画像を表示する枠を作成(授業用自作関数)
+  imshow(srcMat,window_name)#画像を表示(授業用自作関数)
 
   # グラフの設定
-    images = (gray_image, equ)
-    plt. figure(figsize=(10, 5))
-    plt. title('Color Histogram' )
-    plt. xlabel('Pixel Value (0-255)')
-    plt. ylabel (' Frequency' )
+  colors = ('b', 'g', 'r')
+  plt. figure(figsize=(10, 5))
+  plt. title('Color Histogram' )
+  plt. xlabel('Pixel Value (0-255)')
+  plt. ylabel (' Frequency' )
 
-    labels = ["Gray", "EQU"]
   # 各チャンネルごとにヒストグラムを計算して描画
-    for i, img in enumerate(images):
-  #cv2.calcHist([画像],[チャンネル],マスク,[BIN数],[範囲])
-    hist = cv2. calcHist([img], [0], None, [256], [0, 256])
-    plt. plot(hist, label=labels[i])
-    plt.xlim([0, 256])
+  for i, col in enumerate(colors):
+      #cv2.calcHist([画像],[チャンネル],マスク,[BIN数],[範囲])
+      hist = cv2. calcHist([srcMat], [i], None, [256], [0, 256])
+      plt. plot(hist, color=col, label=col. upper())
+      plt. xlim([0, 256])
 
-    plt. legend()
-    plt. show()
+  plt. legend()
+  plt. show()
 
-  def Hough_image(file_path, window_name="src"):
-    srcMat = cv2.imread(file_path)#画像を読み込み、配列にする
+def histogram_equal(file_path, window_name="src"):
+  srcMat= cv2.imread(file_path)#画像を読み込み、配列にする
 
-  # 画像が正常にオープンできたか確認
+  #画像が正常にオープンできたか確認
   if srcMat is None:
     print("Not load image:画像がロードできません。ファイル名を確認してください。")
     sys. exit(-1) # Exit with success
 
-    gray = cv2.cvtColor(srcMat, cv2. COLOR_BGR2GRAY)
-    edges = cv2. Canny(gray, 150, 250, apertureSize=3)
+  named_show(window_name) #画像を表示する枠を作成(授業用自作関数)
+  imshon(srcMat,window_name)#画像を表示(授業用自作関数)
 
-    named_show(window_name+"edge") #画像を表示する枠を作成(授業用自作関数)
-    imshow(edges,window_name+"edge")#画像を表示(授業用自作関数)
+  gray_image = cv2.cvtColor(srcMat,cv2.COLOR_BGR2GRAY)#画像をRGB空間から、HSV色空間へ変換する
 
-  #確率的ハフ変換による直線検出
+  # ヒストグラム平坦化の実行
+  equ = cv2. equalizeHist(gray_image)
+
+  # 結果の横並び表示
+  res = np.hstack((gray_image, equ))
+
+  named_show(window_name+"equ") #画像を表示する枠を作成(授業用自作関数)
+  imshow(res,window_name+"equ")#画像を表示(授業用自作関数)
+
+  # グラフの設定
+  images = (gray_image, equ)
+  plt. figure(figsize=(10, 5))
+  plt. title('Color Histogram' )
+  plt. xlabel('Pixel Value (0-255)')
+  plt. ylabel (' Frequency' )
+
+  labels = ["Gray", "EQU"]
+  # 各チャンネルごとにヒストグラムを計算して描画
+  for i, img in enumerate(images):
+      # cv2.calcHist([画像],[チャンネル],マスク,[BIN数],[範囲])
+      hist = cv2.calcHist([img], [0], None, [256], [0, 256])
+      plt. plot(hist, label=labels[i])
+      plt.xlim([0, 256])
+
+  plt. legend()
+  plt. show()
+
+def Hough_image(file_path, window_name="src"):
+  srcMat =cv2.imread(file_path)#画像を読み込み、配列にする
+
+  #画像が正常にオープンできたか確認
+  if srcMat is None:
+    print("Not load image:画像がロードできません。ファイル名を確認してください。")
+    sys. exit(-1) # Exit with success
+
+  gray = cv2. cvtColor(srcMat, cv2. COLOR_BGR2GRAY)
+  edges = cv2. Canny(gray, 150, 250, apertureSize=3)
+
+  named_show(window_name+"edge") #画像を表示する枠を作成(授業用自作関数)
+  imshom(edges,window_name+"edge")#画像を表示(授業用自作関数)
+
+  # 確率的ハフ変換による直線検出
   # rho:距離の解像度,theta:角度の解像度,threshold:直線とみなす最低限の投票数
-  # minLineLength: 直線とみなす最小の長さ,maxLineGap:同一線とみなす最大の間隔
-    lines = cv2. HoughLinesP(edges, rho=1, theta=np.pi/180, threshold=80,
-    minLineLength=100, maxLineGap=10)
+  # minLineLength:直線とみなす最小の長さ,maxLineGap:同一線とみなす最大の間隔
+  lines = cv2. HoughLinesP(edges, rho=1, theta=np.pi/180, threshold=80,
+                           minLineLength=100, maxLineGap=10)
 
   if lines is not None:
-    for line in lines:
-    x1, y1, x2, y2 = line[0]
-  # 検出した直線を描画
-    cv2.line(srcMat, (x1, y1), (x2, y2), (0, 255, 0), 2)
+      for line in lines:
+          x1, y1, x2, y2 = line[0]
+          # 検出した直線を描画
+          cv2.line(srcMat, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
-    named_show(window_name) #画像を表示する枠を作成(授業用自作関数)
-    imshow(srcMat,window_name)#画像を表示(授業用自作関数)
-
-  
-    
+  named_show(window_name)#画像を表示する枠を作成(授業用自作関数)
+  imshow(srcMat,window_name)#画像を表示(授業用自作関数)
