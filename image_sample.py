@@ -154,7 +154,7 @@ def Hough_image(file_path, window_name="src"):
   edges = cv2. Canny(gray, 150, 250, apertureSize=3)
 
   named_show(window_name+"edge") #画像を表示する枠を作成(授業用自作関数)
-  imshom(edges,window_name+"edge")#画像を表示(授業用自作関数)
+  imshow(edges,window_name+"edge")#画像を表示(授業用自作関数)
 
   # 確率的ハフ変換による直線検出
   # rho:距離の解像度,theta:角度の解像度,threshold:直線とみなす最低限の投票数
@@ -169,4 +169,36 @@ def Hough_image(file_path, window_name="src"):
           cv2.line(srcMat, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
   named_show(window_name)#画像を表示する枠を作成(授業用自作関数)
+  imshow(srcMat,window_name)#画像を表示(授業用自作関数)
+def Circle_Hough_image(file_path, window_name="src"):
+  srcMat=cv2.imread(file_path)#画像を読み込み、配列にする
+
+  # 画像が正常にオープンできたか確認
+  if srcMat is None:
+    print("Not load image:画像がロードできません。ファイル名を確認してください。")
+    sys. exit(-1) # Exit with success
+
+  srcMat = cv2. resize(srcMat, (600, 400))
+
+  gray = cv2. cvtColor(srcMat, cv2. COLOR_BGR2GRAY)
+  ret, binary = cv2. threshold(gray, 240, 255, cv2. THRESH_BINARY)
+  edges = cv2. Canny(binary, 100, 250, apertureSize=7)
+
+  named_show(window_name+"edge") #画像を表示する枠を作成(授業用自作関数)
+  imshow(edges, window_name+"edge")#画像を表示(授業用自作関数)
+
+  # ハフ変換による円検出
+  # method: HOUGH_GRADIENT,dp:解像度の比率,minDist:円同士の最小距離
+  # paraml:Cannyの上限値,param2:中心投票の閾値(小さいほど多くの円を拾う)
+  circles = cv2. HoughCircles(gray, cv2. HOUGH_GRADIENT, dp=1, minDist=20,
+                             param1=255, param2=70, minRadius=0, maxRadius=0)
+  if circles is not None:
+      circles = np.uint16(np.around(circles))#Opencvの描画系は小数点が利用できないため、整数とする。
+      for i in circles[0, :]:
+          # 外周を描画
+          cv2.circle(srcMat, (i[0], i[1]), i[2], (0, 255, 0), 2)
+          # 中心を描画
+          cv2.circle(srcMat, (i[0], i[1]), 2, (0, 0, 255), 3)
+
+  named_show(window_name) #画像を表示する枠を作成(授業用自作関数)
   imshow(srcMat,window_name)#画像を表示(授業用自作関数)
