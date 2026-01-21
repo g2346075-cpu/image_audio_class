@@ -62,8 +62,9 @@ def pickcolor_image(file_path, lower_hue, upper_hue, window_name="src"):
 
   hsv_image = cv2.cvtColor(srcMat,cv2.COLOR_BGR2HSV)#画像をRGB空間から、HSV色空間へ変換する
 
-  lower = np. array([lower_hue, 200, 200]) # 下限
-  upper = np. array([upper_hue, 255, 255]) # EBR
+  lower = np.array([15, 0, 0])
+  upper = np.array([35, 255, 255])
+
 
   # 4. 指定した範囲内の色を抽出するマスクを作成
   mask = cv2. inRange(hsv_image, lower, upper)
