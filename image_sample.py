@@ -111,7 +111,7 @@ def histogram_equal(file_path, window_name="src"):
     sys. exit(-1) # Exit with success
 
   named_show(window_name) #画像を表示する枠を作成(授業用自作関数)
-  imshon(srcMat,window_name)#画像を表示(授業用自作関数)
+  imshow(srcMat,window_name)#画像を表示(授業用自作関数)
 
   gray_image = cv2.cvtColor(srcMat,cv2.COLOR_BGR2GRAY)#画像をRGB空間から、HSV色空間へ変換する
 
