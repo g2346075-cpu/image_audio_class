@@ -82,33 +82,32 @@ def pickcolor_image(file_path, lower_hue, upper_hue, window_name="src"):
   named_show(window_name)#画像を表示する枠を作成(授業用自作関数)
   imshow(srcMat,window_name)#画像を表示(授業用自作関数)  
 
-def show_histgram(file_path, window_name="src"):
-  srcMat=cv2.imread(file_path)#画像を読み込み、配列にする
+def show_histgram_hsv(file_path, window_name="src"):
+    srcMat = cv2.imread(file_path)
+    if srcMat is None:
+        print("Not load image")
+        sys.exit(-1)
 
-  #画像が正常にオープンできたか確認
-  if srcMat is None:
-    print("Not load image:画像がロードできません。ファイル名を確認してください。")
-    sys. exit(-1) # Exit with success
+    hsvMat = cv2.cvtColor(srcMat, cv2.COLOR_BGR2HSV)
 
-  named_show(window_name) #画像を表示する枠を作成(授業用自作関数)
-  imshow(srcMat,window_name)#画像を表示(授業用自作関数)
+    channels = ('H', 'S', 'V')
+    colors = ('m', 'c', 'k')  # 見やすさ用
 
-  # グラフの設定
-  colors = ('b', 'g', 'r')
-  plt. figure(figsize=(10, 5))
-  plt. title('Color Histogram' )
-  plt. xlabel('Pixel Value (0-255)')
-  plt. ylabel (' Frequency' )
+    plt.figure(figsize=(10, 5))
+    plt.title('HSV Histogram')
+    plt.xlabel('Value')
+    plt.ylabel('Frequency')
 
-  # 各チャンネルごとにヒストグラムを計算して描画
-  for i, col in enumerate(colors):
-      #cv2.calcHist([画像],[チャンネル],マスク,[BIN数],[範囲])
-      hist = cv2. calcHist([srcMat], [i], None, [256], [0, 256])
-      plt. plot(hist, color=col, label=col. upper())
-      plt. xlim([0, 256])
+    for i, ch in enumerate(channels):
+        if i == 0:
+            hist = cv2.calcHist([hsvMat], [i], None, [180], [0, 180])
+        else:
+            hist = cv2.calcHist([hsvMat], [i], None, [256], [0, 256])
+        plt.plot(hist, label=ch)
 
-  plt. legend()
-  plt. show()
+    plt.legend()
+    plt.show()
+
 
 def histogram_equal(file_path, window_name="src"):
   srcMat= cv2.imread(file_path)#画像を読み込み、配列にする
