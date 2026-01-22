@@ -108,6 +108,32 @@ def show_histgram_hsv(file_path, window_name="src"):
     plt.legend()
     plt.show()
 
+def analyze_hsv_statistics(file_path):
+    import cv2
+    import numpy as np
+    import sys
+
+    srcMat = cv2.imread(file_path)
+    if srcMat is None:
+        print("Not load image")
+        sys.exit(-1)
+
+    hsvMat = cv2.cvtColor(srcMat, cv2.COLOR_BGR2HSV)
+
+    stats = {}
+    channels = {'H': 0, 'S': 1, 'V': 2}
+
+    for name, idx in channels.items():
+        channel_data = hsvMat[:, :, idx]
+        stats[name] = {
+            'mean': np.mean(channel_data),
+            'std': np.std(channel_data),
+            'min': np.min(channel_data),
+            'max': np.max(channel_data)
+        }
+
+    return stats
+
 
 def histogram_equal(file_path, window_name="src"):
   srcMat= cv2.imread(file_path)#画像を読み込み、配列にする
